@@ -3,6 +3,7 @@
 set -e
 
 echo "Bootstrapping VESSL Flare..."
+echo
 URL_BASE="flare.vessl.ai"
 
 ########################
@@ -68,7 +69,7 @@ _check_root() {
   _EUID=$(id -u)
   if [ "${_EUID}" != "0" ]
   then
-    echo "===== WARNING! ====="
+    echo "===== USER NOT ROOT! ====="
     echo "You do not appear to be root (user id ${_EUID} != 0)."
     echo "Without root permission, Flare may not able to read"
     echo "certain system files or execute certain commands."
@@ -89,22 +90,10 @@ _check_root() {
       return 0
     fi
 
-    if [ ! -r "/dev/tty" ]
-    then
-      echo "Cannot open /dev/tty for prompting; giving up."
-      echo "If you want to run Flare as non-root without interaction,"
-      echo "set environment variable FLARE_NOROOT to non-empty string, and run again."
-      return 1
-    fi
-
-    echo "Do you want to continue running Flare as non-root?"
-    printf "[Type 'y' or 'yes' to continue]: "
-
-    read -r RESP < /dev/tty
-    case "${RESP}" in
-      "y"|"yes") return 0 ;;
-      *) return 1 ;;
-    esac
+    echo "If you understand the message above and are still sure that you"
+    echo "need to run Flare as non-root, please set environment variable"
+    echo "FLARE_NOROOT to non-empty string and run Flare again."
+    return 1
   fi
 }
 
